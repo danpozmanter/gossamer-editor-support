@@ -4,6 +4,7 @@ Editor integrations for the [Gossamer programming language](https://github.com/g
 syntax highlighting, file detection, comments, brackets, and (where the
 editor supports it) tree-sitter queries.
 
+(Support is built in for [Lite Anvil](https://github.com/danpozmanter/lite-anvil/)).
 ## Editors
 
 | Editor                     | Path                       | Mechanism             |
