@@ -1,0 +1,14 @@
+id = "gossamer"
+name = "Gossamer"
+description = "Gossamer language support for Zed."
+version = "0.1.0"
+schema_version = 1
+authors = ["Gossamer contributors"]
+repository = "https://github.com/gossamer-lang/gossamer-site"
+
+[grammars.gossamer]
+repository = "https://github.com/gossamer-lang/gossamer-site"
+commit = "main"
+path = "editors/tree-sitter-gossamer"
+
+[language_servers]

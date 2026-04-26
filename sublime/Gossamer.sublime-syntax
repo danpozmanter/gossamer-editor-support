@@ -1,0 +1,109 @@
+%YAML 1.2
+---
+name: Gossamer
+file_extensions:
+  - gos
+scope: source.gossamer
+
+variables:
+  ident: '[A-Za-z_][A-Za-z0-9_]*'
+  type_suffix: '(?:[iuf](?:8|16|32|64|128|size))'
+
+contexts:
+  main:
+    - include: comments
+    - include: attributes
+    - include: strings
+    - include: chars
+    - include: numbers
+    - include: keywords
+    - include: types
+    - include: literals
+    - include: operators
+    - include: functions
+    - include: identifiers
+
+  comments:
+    - match: '//.*$'
+      scope: comment.line.double-slash.gossamer
+    - match: '/\*'
+      scope: punctuation.definition.comment.gossamer
+      push:
+        - meta_scope: comment.block.gossamer
+        - match: '\*/'
+          pop: true
+
+  attributes:
+    - match: '#!?\['
+      scope: punctuation.definition.attribute.gossamer
+      push:
+        - meta_scope: meta.attribute.gossamer
+        - match: '\]'
+          pop: true
+        - include: strings
+        - include: identifiers
+
+  strings:
+    - match: 'b?r(#*)"'
+      push:
+        - meta_scope: string.quoted.double.raw.gossamer
+        - match: '"\1'
+          pop: true
+    - match: 'b?"'
+      push:
+        - meta_scope: string.quoted.double.gossamer
+        - match: '"'
+          pop: true
+        - match: '\\(?:[nrt0\\"'']|x[0-9a-fA-F]{2}|u\{[0-9a-fA-F]+\})'
+          scope: constant.character.escape.gossamer
+
+  chars:
+    - match: 'b?''(?:\\(?:[nrt0\\"'']|x[0-9a-fA-F]{2}|u\{[0-9a-fA-F]+\})|.)'''
+      scope: string.quoted.single.gossamer
+
+  numbers:
+    - match: '\b0x[0-9a-fA-F_]+{{type_suffix}}?\b'
+      scope: constant.numeric.hex.gossamer
+    - match: '\b0b[01_]+{{type_suffix}}?\b'
+      scope: constant.numeric.binary.gossamer
+    - match: '\b0o[0-7_]+{{type_suffix}}?\b'
+      scope: constant.numeric.octal.gossamer
+    - match: '\b[0-9][0-9_]*(?:\.[0-9_]+)?(?:[eE][+-]?[0-9_]+)?{{type_suffix}}?\b'
+      scope: constant.numeric.decimal.gossamer
+
+  keywords:
+    - match: '\b(if|else|match|loop|while|for|in|break|continue|return|yield|defer|select|go)\b'
+      scope: keyword.control.gossamer
+    - match: '\b(as|async|await|const|crate|dyn|enum|extern|fn|impl|let|mod|mut|pub|ref|self|Self|static|struct|super|trait|type|unsafe|use|where)\b'
+      scope: keyword.other.gossamer
+    - match: '\b{{ident}}!'
+      scope: entity.name.function.macro.gossamer
+
+  types:
+    - match: '\b(bool|char|str|i8|i16|i32|i64|i128|isize|u8|u16|u32|u64|u128|usize|f32|f64)\b'
+      scope: support.type.primitive.gossamer
+    - match: '\b(Arc|Array|BTreeMap|BTreeSet|Box|HashMap|HashSet|Mutex|Option|Receiver|Result|Sender|String|Vec)\b'
+      scope: support.type.gossamer
+    - match: '\b[A-Z][A-Za-z0-9_]*\b'
+      scope: entity.name.type.gossamer
+
+  literals:
+    - match: '\b(true|false|None|Some|Ok|Err)\b'
+      scope: constant.language.gossamer
+
+  operators:
+    - match: '\|>'
+      scope: keyword.operator.pipe.gossamer
+    - match: '(==|!=|<=|>=|&&|\|\||<<|>>|\+=|-=|\*=|/=|%=|&=|\|=|\^=|->|=>|\.\.=|\.\.|::)'
+      scope: keyword.operator.gossamer
+    - match: '[+\-*/%<>!~|&^?.=]'
+      scope: keyword.operator.gossamer
+
+  functions:
+    - match: '\b({{ident}})\s*(?=\()'
+      captures:
+        1: entity.name.function.gossamer
+
+  identifiers:
+    - match: '\b{{ident}}\b'
+      scope: variable.other.gossamer

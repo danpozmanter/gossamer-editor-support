@@ -1,0 +1,41 @@
+{
+  "name": "gossamer",
+  "displayName": "Gossamer",
+  "description": "Syntax highlighting and language configuration for the Gossamer programming language.",
+  "version": "0.1.0",
+  "publisher": "gossamer-lang",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gossamer-lang/gossamer-site.git"
+  },
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "icon": "icon.png",
+  "contributes": {
+    "languages": [
+      {
+        "id": "gossamer",
+        "aliases": [
+          "Gossamer",
+          "gossamer"
+        ],
+        "extensions": [
+          ".gos"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "gossamer",
+        "scopeName": "source.gossamer",
+        "path": "./syntaxes/gossamer.tmLanguage.json"
+      }
+    ]
+  }
+}

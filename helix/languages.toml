@@ -1,0 +1,17 @@
+# Drop into ~/.config/helix/languages.toml (or merge into your existing
+# file). Pair with the tree-sitter grammar at
+# ../tree-sitter-gossamer.
+
+[[language]]
+name = "gossamer"
+scope = "source.gossamer"
+file-types = ["gos"]
+roots = ["project.toml", ".git"]
+comment-token = "//"
+block-comment-tokens = { start = "/*", end = "*/" }
+indent = { tab-width = 4, unit = "    " }
+auto-format = false
+
+[[grammar]]
+name = "gossamer"
+source = { git = "https://github.com/gossamer-lang/gossamer-site", rev = "main", subpath = "editors/tree-sitter-gossamer" }
