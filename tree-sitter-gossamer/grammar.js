@@ -50,6 +50,16 @@ module.exports = grammar({
 
   word: $ => $.identifier,
 
+  conflicts: $ => [
+    [$._expression, $.struct_expression],
+    [$._pattern, $.struct_pattern],
+    [$._pattern, $.tuple_struct_pattern],
+    [$._pattern, $._expression],
+    [$._expression, $.tuple_struct_pattern],
+    [$.tuple_expression, $.tuple_pattern],
+    [$.struct_expression, $.struct_pattern],
+  ],
+
   rules: {
     source_file: $ => repeat($._item),
 
@@ -83,23 +93,21 @@ module.exports = grammar({
       seq("[", $._token_tree, "]"),
     )),
 
-    use_declaration: $ => seq(
+    use_declaration: $ => prec.right(seq(
       optional("pub"),
       "use",
       $._use_path,
       optional(";"),
-    ),
+    )),
 
     _use_path: $ => seq(
-      $._path,
-      optional(seq(
-        "::",
-        choice(
-          "*",
-          seq("{", commaSep($._use_path), "}"),
-        ),
+      $.identifier,
+      optional(choice(
+        seq("::", "*"),
+        seq("::", "{", commaSep($._use_path), "}"),
+        seq("::", $._use_path),
+        seq("as", $.identifier),
       )),
-      optional(seq("as", $.identifier)),
     ),
 
     _path: $ => seq(
@@ -114,7 +122,7 @@ module.exports = grammar({
       choice(";", $.declaration_block),
     ),
 
-    type_item: $ => seq(
+    type_item: $ => prec.right(seq(
       optional("pub"),
       "type",
       field("name", $.identifier),
@@ -122,7 +130,7 @@ module.exports = grammar({
       "=",
       $._type,
       optional(";"),
-    ),
+    )),
 
     extern_item: $ => seq(
       "extern",
@@ -130,7 +138,7 @@ module.exports = grammar({
       $.declaration_block,
     ),
 
-    const_item: $ => seq(
+    const_item: $ => prec.right(seq(
       optional("pub"),
       "const",
       field("name", $.identifier),
@@ -139,9 +147,9 @@ module.exports = grammar({
       "=",
       field("value", $._expression),
       optional(";"),
-    ),
+    )),
 
-    static_item: $ => seq(
+    static_item: $ => prec.right(seq(
       optional("pub"),
       "static",
       optional("mut"),
@@ -151,9 +159,9 @@ module.exports = grammar({
       "=",
       field("value", $._expression),
       optional(";"),
-    ),
+    )),
 
-    struct_item: $ => seq(
+    struct_item: $ => prec.right(seq(
       optional("pub"),
       "struct",
       field("name", $.type_identifier),
@@ -163,7 +171,7 @@ module.exports = grammar({
         seq("(", commaSep($._type), ")", optional(";")),
         ";",
       ),
-    ),
+    )),
 
     enum_item: $ => seq(
       optional("pub"),
@@ -195,7 +203,7 @@ module.exports = grammar({
       "trait",
       field("name", $.type_identifier),
       optional($.type_parameters),
-      optional(seq(":", commaSep1($._type))),
+      optional(seq(":", $._type, repeat(seq("+", $._type)))),
       $.declaration_block,
     ),
 
@@ -232,14 +240,15 @@ module.exports = grammar({
     where_clause: $ => seq(
       $._type,
       ":",
-      commaSep1($._type),
+      $._type,
+      repeat(seq("+", $._type)),
     ),
 
     type_parameters: $ => seq(
       "<",
       commaSep1(choice(
         $.identifier,
-        seq($.identifier, ":", commaSep1($._type)),
+        seq($.identifier, ":", $._type, repeat(seq("+", $._type))),
         seq($.identifier, "=", $._type),
       )),
       ">",
@@ -269,23 +278,22 @@ module.exports = grammar({
     ),
 
     _statement: $ => choice(
-      seq($._expression, optional(";")),
+      prec.right(seq($._expression, optional(";"))),
       $.let_declaration,
       $._item,
       ";",
     ),
 
-    let_declaration: $ => seq(
+    let_declaration: $ => prec.right(seq(
       "let",
       optional("mut"),
       field("pattern", $._pattern),
       optional(seq(":", field("type", $._type))),
       optional(seq("=", field("value", $._expression))),
       optional(";"),
-    ),
+    )),
 
     _pattern: $ => choice(
-      $.identifier,
       $.literal,
       $.tuple_pattern,
       $.struct_pattern,
@@ -369,7 +377,6 @@ module.exports = grammar({
 
     _expression: $ => choice(
       $.literal,
-      $.identifier,
       $._path,
       $.unary_expression,
       $.binary_expression,
@@ -540,7 +547,7 @@ module.exports = grammar({
       choice($.identifier, /[0-9]+/),
     )),
 
-    method_call_expression: $ => prec(13, seq(
+    method_call_expression: $ => prec(14, seq(
       $._expression,
       ".",
       $.identifier,
@@ -557,7 +564,10 @@ module.exports = grammar({
       "]",
     )),
 
-    tuple_expression: $ => seq("(", commaSep($._expression), ")"),
+    tuple_expression: $ => choice(
+      seq("(", ")"),
+      seq("(", $._expression, ",", commaSep($._expression), ")"),
+    ),
 
     array_expression: $ => seq(
       "[",

@@ -1,3 +1,6 @@
+; Helix tree-sitter highlight queries: later patterns override earlier ones.
+; Catch-alls go first; more specific overrides come last.
+
 ; Comments
 (line_comment) @comment
 (block_comment) @comment
@@ -12,17 +15,18 @@
 (char_literal) @string
 (escape_sequence) @string.escape
 
-; Built-in literals (Some/None/Ok/Err live as paths/identifiers — match by name)
-((identifier) @constant.builtin
-  (#match? @constant.builtin "^(Some|None|Ok|Err)$"))
-
-; Primitive and built-in types
+; Catch-all identifiers (specific cases override these below)
+(identifier) @variable
+(type_identifier) @type
 (primitive_type) @type.builtin
 
+; Built-in generic/container types
 ((type_identifier) @type.builtin
   (#match? @type.builtin "^(Arc|Array|BTreeMap|BTreeSet|Box|HashMap|HashSet|Mutex|Option|Receiver|Result|Sender|String|Vec)$"))
 
-(type_identifier) @type
+; Built-in constructors (Some/None/Ok/Err live as paths/identifiers — match by name)
+((identifier) @constant.builtin
+  (#match? @constant.builtin "^(Some|None|Ok|Err)$"))
 
 ; Functions
 (function_item name: (identifier) @function)
@@ -36,9 +40,6 @@
 ; Parameters
 (parameter pattern: (identifier) @variable.parameter)
 
-; Identifiers
-(identifier) @variable
-
 ; Operators
 [
   "+"
@@ -50,7 +51,6 @@
   "|"
   "^"
   "!"
-  "~"
   "<"
   ">"
   "="
@@ -77,7 +77,6 @@
   ".."
   "..="
   "::"
-  "?"
   "@"
 ] @operator
 
@@ -91,9 +90,7 @@
 [
   "as"
   "async"
-  "await"
   "const"
-  "crate"
   "dyn"
   "enum"
   "extern"
@@ -103,12 +100,9 @@
   "mod"
   "mut"
   "pub"
-  "ref"
   "self"
-  "Self"
   "static"
   "struct"
-  "super"
   "trait"
   "type"
   "unsafe"
@@ -125,13 +119,15 @@
   "for"
   "in"
   "break"
-  "continue"
   "return"
-  "yield"
   "defer"
   "select"
   "go"
 ] @keyword.control
+
+; `continue_expression` is a bare-literal rule, so the "continue" token isn't
+; exposed as an anonymous node — match the named node instead.
+(continue_expression) @keyword.control
 
 ; Attributes
 (attribute_item) @attribute

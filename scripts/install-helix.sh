@@ -34,6 +34,10 @@ fi
 
 if [ -f "$TARGET_TOML" ] && grep -q '^name = "gossamer"' "$TARGET_TOML"; then
     echo "languages.toml already contains a gossamer entry; skipping merge"
+    if grep -q '^source = { git = .*gossamer' "$TARGET_TOML"; then
+        sed -i "s|^source = { git = .*gossamer.*\$|source = { path = \"$GRAMMAR_DIR\" }|" "$TARGET_TOML"
+        echo "  rewrote stale git source to local path: $GRAMMAR_DIR"
+    fi
 else
     {
         echo ""
@@ -47,8 +51,17 @@ fi
 cp "$QUERIES_SRC"/*.scm "$QUERIES_DST/"
 echo "copied highlight queries to $QUERIES_DST"
 
+GRAMMAR_OUT="$CONFIG_DIR/runtime/grammars/gossamer.so"
+
 if command -v hx >/dev/null 2>&1; then
-    hx --grammar build
+    # `hx --grammar build` compiles every grammar in languages.toml; unrelated
+    # grammars failing in the user's environment must not abort our install.
+    hx --grammar build || echo "  (one or more unrelated grammars failed to build; continuing)"
+    if [ ! -f "$GRAMMAR_OUT" ]; then
+        echo "gossamer grammar did not build: $GRAMMAR_OUT not found" >&2
+        exit 1
+    fi
+    echo "gossamer grammar built: $GRAMMAR_OUT"
 else
     echo "hx not found on PATH; run 'hx --grammar build' manually"
 fi

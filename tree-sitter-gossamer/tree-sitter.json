@@ -1,0 +1,34 @@
+{
+  "grammars": [
+    {
+      "name": "gossamer",
+      "camelcase": "Gossamer",
+      "scope": "source.gossamer",
+      "path": ".",
+      "file-types": ["gos"],
+      "highlights": ["queries/highlights.scm"],
+      "injections": ["queries/injections.scm"],
+      "locals": ["queries/locals.scm"],
+      "injection-regex": "^gossamer$"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "Apache-2.0",
+    "description": "Tree-sitter grammar for the Gossamer programming language.",
+    "authors": [
+      { "name": "Gossamer language team" }
+    ],
+    "links": {
+      "repository": "https://github.com/gossamer-lang/gossamer-site"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": false,
+    "node": true,
+    "python": false,
+    "rust": true,
+    "swift": false
+  }
+}
