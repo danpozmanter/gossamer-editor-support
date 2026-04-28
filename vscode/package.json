@@ -1,7 +1,7 @@
 {
   "name": "gossamer",
   "displayName": "Gossamer",
-  "description": "Syntax highlighting and language configuration for the Gossamer programming language.",
+  "description": "Syntax highlighting, language configuration, and LSP client for the Gossamer programming language.",
   "version": "0.1.0",
   "publisher": "gossamer-lang",
   "license": "Apache-2.0",
@@ -10,12 +10,16 @@
     "url": "https://github.com/gossamer-lang/gossamer-site.git"
   },
   "engines": {
-    "vscode": "^1.70.0"
+    "vscode": "^1.75.0"
   },
   "categories": [
     "Programming Languages"
   ],
   "icon": "icon.png",
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:gossamer"
+  ],
   "contributes": {
     "languages": [
       {
@@ -36,6 +40,25 @@
         "scopeName": "source.gossamer",
         "path": "./syntaxes/gossamer.tmLanguage.json"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Gossamer",
+      "properties": {
+        "gossamer.lsp.command": {
+          "type": "string",
+          "default": "gos",
+          "description": "Path to the Gossamer CLI binary that hosts the language server."
+        },
+        "gossamer.lsp.args": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["lsp"],
+          "description": "Arguments passed to the Gossamer CLI to start the language server."
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
   }
 }

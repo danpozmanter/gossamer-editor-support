@@ -8,8 +8,11 @@
 ;;; Commentary:
 
 ;; A simple major mode for editing Gossamer source files. Provides
-;; syntax highlighting, comment handling, and basic indentation. No
-;; LSP integration yet.
+;; syntax highlighting, comment handling, basic indentation, and an
+;; eglot LSP client registration (Emacs 29+ ships eglot built-in).
+;; The LSP client invokes `gos lsp` (the `lsp` subcommand of the
+;; Gossamer CLI). If `gos` is not on PATH eglot reports a startup
+;; failure but the mode still works for editing and highlighting.
 
 ;;; Code:
 
@@ -107,6 +110,15 @@
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.gos\\'" . gossamer-mode))
+
+(defcustom gossamer-lsp-server-command '("gos" "lsp")
+  "Command and arguments used by eglot to launch the Gossamer LSP server."
+  :type '(repeat string)
+  :group 'gossamer)
+
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               `(gossamer-mode . ,gossamer-lsp-server-command)))
 
 (provide 'gossamer-mode)
 ;;; gossamer-mode.el ends here

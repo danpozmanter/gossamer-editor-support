@@ -19,6 +19,25 @@ languages/gossamer/brackets.scm    # bracket pairs
 languages/gossamer/indents.scm     # indentation rules
 ```
 
-## Status
+## LSP
 
-Highlighting only. No language server yet.
+Zed launches language servers from a Rust/WASM extension; this
+extension does not ship compiled WASM. Until that lands, wire `gos
+lsp` into your Zed user settings — copy `settings.json.snippet` in
+this directory into your settings (Cmd/Ctrl+`,` in Zed):
+
+```json
+{
+  "languages": {
+    "Gossamer": { "language_servers": ["gossamer-lsp"] }
+  },
+  "lsp": {
+    "gossamer-lsp": {
+      "binary": { "path": "gos", "arguments": ["lsp"] }
+    }
+  }
+}
+```
+
+If `gos` is not on `PATH`, Zed reports a startup failure and
+tree-sitter highlighting still works.

@@ -56,3 +56,8 @@ echo "  3. Select: $STAGE_DIR"
 echo "  4. Reload the window"
 echo
 echo "Open a .gos file to confirm highlighting."
+echo
+echo "LSP: Zed launches language servers from a Rust/WASM extension. To"
+echo "     wire \`gos lsp\` without compiling the extension, merge the"
+echo "     snippet at $SRC_DIR/settings.json.snippet"
+echo "     into your Zed user settings (Cmd/Ctrl+, in Zed)."

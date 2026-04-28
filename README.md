@@ -29,9 +29,12 @@ All integrations cover at minimum:
 - Attributes (`#[...]`, `#![...]`)
 - Function-call detection (identifier-before-paren)
 
-None of them ship a language server today - `gos` does not yet expose
-one. When that lands upstream, the LSP-aware editors (VSCode, Helix,
-Neovim, Zed, Emacs) will be wired up here.
+LSP wiring is configured for VSCode, Helix, Neovim, Zed, Emacs, and
+Sublime Text. Each client launches `gos lsp` (the LSP subcommand of
+the Gossamer CLI). If `gos` is not on `PATH` the LSP client fails to
+start and syntax highlighting still works. Vim has no first-party
+LSP — use a plugin (`yegappan/lsp`, ALE, coc.nvim) and point it at
+`gos lsp`.
 
 ## Install
 
@@ -46,7 +49,8 @@ Per-editor install scripts live in `scripts/`:
 ./scripts/install-sublime.sh
 ```
 
-Each script is idempotent and prints what it did. See the per-editor
+Each script overwrites any prior install, so re-running picks up
+upstream changes (syntax, LSP wiring, queries). See the per-editor
 `README.md` files for manual installation steps and the underlying
 mechanism.
 

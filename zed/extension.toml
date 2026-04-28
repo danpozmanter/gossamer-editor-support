@@ -11,4 +11,6 @@ repository = "https://github.com/gossamer-lang/gossamer-site"
 commit = "main"
 path = "editors/tree-sitter-gossamer"
 
-[language_servers]
+[language_servers.gossamer-lsp]
+name = "gossamer-lsp"
+language = "Gossamer"

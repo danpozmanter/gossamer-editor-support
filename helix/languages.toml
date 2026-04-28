@@ -11,6 +11,11 @@ comment-token = "//"
 block-comment-tokens = { start = "/*", end = "*/" }
 indent = { tab-width = 4, unit = "    " }
 auto-format = false
+language-servers = ["gossamer-lsp"]
+
+[language-server.gossamer-lsp]
+command = "gos"
+args = ["lsp"]
 
 [[grammar]]
 name = "gossamer"

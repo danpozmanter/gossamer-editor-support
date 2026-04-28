@@ -24,13 +24,20 @@ contexts:
     - include: identifiers
 
   comments:
-    - match: '//.*$'
-      scope: comment.line.double-slash.gossamer
-    - match: '/\*'
+    - match: '//'
       scope: punctuation.definition.comment.gossamer
       push:
+        - meta_scope: comment.line.double-slash.gossamer
+        - meta_include_prototype: false
+        - match: $\n?
+          pop: true
+    - match: '/\*'
+      scope: comment.block.gossamer punctuation.definition.comment.begin.gossamer
+      push:
         - meta_scope: comment.block.gossamer
+        - meta_include_prototype: false
         - match: '\*/'
+          scope: comment.block.gossamer punctuation.definition.comment.end.gossamer
           pop: true
 
   attributes:

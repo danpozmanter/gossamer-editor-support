@@ -1,0 +1,9 @@
+{
+  "clients": {
+    "gossamer": {
+      "enabled": true,
+      "command": ["gos", "lsp"],
+      "selector": "source.gossamer"
+    }
+  }
+}

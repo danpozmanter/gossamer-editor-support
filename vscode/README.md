@@ -36,8 +36,22 @@ Open any `.gos` file to confirm highlighting.
 - Attributes (`#[...]`, `#![...]`)
 - Function-call detection (identifier-before-paren)
 
-## Limitations
+## LSP
 
-This is a TextMate grammar — purely lexical highlighting. There is no LSP
-integration yet; `gos` does not ship a language server. When one lands
-upstream, it will be wired in here.
+The extension launches `gos lsp` for `.gos` buffers via
+`vscode-languageclient`. Override the binary or arguments with:
+
+```jsonc
+// .vscode/settings.json or user settings
+{
+  "gossamer.lsp.command": "gos",
+  "gossamer.lsp.args": ["lsp"]
+}
+```
+
+If `gos` is not on `PATH`, the LSP client fails to start and the
+TextMate grammar still provides highlighting.
+
+The install script runs `npm install --omit=dev` for you. For manual
+installs, run that yourself in this directory so
+`vscode-languageclient` is on disk.

@@ -45,3 +45,16 @@ If you only want syntax highlighting (no treesitter), the vim files
 in `../vim/` work in neovim too. Drop them under `~/.config/nvim/` or
 add the repo as a runtimepath via your plugin manager pointing to
 `editors/vim`.
+
+## LSP
+
+`lsp/gossamer.lua` is a Neovim 0.11+ native LSP client config that
+launches `gos lsp` for `.gos` buffers. The install script copies it
+to `~/.config/nvim/lsp/gossamer.lua`. Activate from your `init.lua`:
+
+```lua
+vim.lsp.enable("gossamer")
+```
+
+If `gos` is not on `PATH`, the client fails to start and tree-sitter
+highlighting still works.
