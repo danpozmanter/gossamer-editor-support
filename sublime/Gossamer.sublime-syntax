@@ -33,12 +33,18 @@ contexts:
           pop: true
     - match: '/\*'
       scope: comment.block.gossamer punctuation.definition.comment.begin.gossamer
-      push:
-        - meta_scope: comment.block.gossamer
-        - meta_include_prototype: false
-        - match: '\*/'
-          scope: comment.block.gossamer punctuation.definition.comment.end.gossamer
-          pop: true
+      push: block_comment
+
+  # Gossamer block comments nest: each inner `/*` pushes another copy of
+  # this context, so the comment only ends at its matching `*/`.
+  block_comment:
+    - meta_scope: comment.block.gossamer
+    - meta_include_prototype: false
+    - match: '/\*'
+      push: block_comment
+    - match: '\*/'
+      scope: comment.block.gossamer punctuation.definition.comment.end.gossamer
+      pop: true
 
   attributes:
     - match: '#!?\['
@@ -79,9 +85,12 @@ contexts:
       scope: constant.numeric.decimal.gossamer
 
   keywords:
+    # `arena` is contextual: a keyword only when it opens a block.
+    - match: '\barena\b(?=\s*\{)'
+      scope: keyword.control.gossamer
     - match: '\b(if|else|match|loop|while|for|in|break|continue|return|yield|defer|select|go)\b'
       scope: keyword.control.gossamer
-    - match: '\b(as|async|await|const|crate|dyn|enum|extern|fn|impl|let|mod|mut|pub|ref|self|Self|static|struct|super|trait|type|unsafe|use|where)\b'
+    - match: '\b(as|async|await|const|crate|dyn|enum|extern|fn|impl|let|mod|mut|package|pub|self|Self|static|struct|super|trait|type|unsafe|use|where)\b'
       scope: keyword.other.gossamer
     - match: '\b{{ident}}!'
       scope: entity.name.function.macro.gossamer
@@ -89,7 +98,7 @@ contexts:
   types:
     - match: '\b(bool|char|str|i8|i16|i32|i64|i128|isize|u8|u16|u32|u64|u128|usize|f32|f64)\b'
       scope: support.type.primitive.gossamer
-    - match: '\b(Arc|Array|BTreeMap|BTreeSet|Box|HashMap|HashSet|Mutex|Option|Receiver|Result|Sender|String|Vec)\b'
+    - match: '\b(Arc|Array|BTreeMap|BTreeSet|Box|Fn|FnMut|FnOnce|HashMap|HashSet|JoinHandle|Mutex|Option|Rc|Receiver|Result|RwLock|Sender|String|Vec|Weak)\b'
       scope: support.type.gossamer
     - match: '\b[A-Z][A-Za-z0-9_]*\b'
       scope: entity.name.type.gossamer

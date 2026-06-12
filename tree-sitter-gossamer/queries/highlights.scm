@@ -22,7 +22,7 @@
 
 ; Built-in generic/container types
 ((type_identifier) @type.builtin
-  (#match? @type.builtin "^(Arc|Array|BTreeMap|BTreeSet|Box|HashMap|HashSet|Mutex|Option|Receiver|Result|Sender|String|Vec)$"))
+  (#match? @type.builtin "^(Arc|Array|BTreeMap|BTreeSet|Box|Fn|FnMut|FnOnce|HashMap|HashSet|JoinHandle|Mutex|Option|Rc|Receiver|Result|RwLock|Sender|String|Vec|Weak)$"))
 
 ; Built-in constructors (Some/None/Ok/Err live as paths/identifiers — match by name)
 ((identifier) @constant.builtin
@@ -31,7 +31,11 @@
 ; Functions
 (function_item name: (identifier) @function)
 (call_expression function: (identifier) @function)
+(generic_function function: (identifier) @function)
 (method_call_expression (identifier) @function.method)
+
+; Macros (`println!`, `vec!`, ...)
+(macro_invocation macro: (identifier) @function.macro)
 
 ; Fields
 (field_expression (identifier) @variable.field .)
@@ -39,6 +43,7 @@
 
 ; Parameters
 (parameter pattern: (identifier) @variable.parameter)
+(closure_parameter pattern: (identifier) @variable.parameter)
 
 ; Operators
 [
@@ -77,7 +82,9 @@
   ".."
   "..="
   "::"
+  "::<"
   "@"
+  "?"
 ] @operator
 
 "|>" @operator.special
@@ -123,6 +130,7 @@
   "defer"
   "select"
   "go"
+  "arena"
 ] @keyword.control
 
 ; `continue_expression` is a bare-literal rule, so the "continue" token isn't

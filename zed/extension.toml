@@ -1,7 +1,7 @@
 id = "gossamer"
 name = "Gossamer"
 description = "Gossamer language support for Zed."
-version = "0.1.0"
+version = "0.2.0"
 schema_version = 1
 authors = ["Gossamer contributors"]
 repository = "https://github.com/gossamer-lang/gossamer-site"

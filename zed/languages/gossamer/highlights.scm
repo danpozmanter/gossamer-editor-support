@@ -21,21 +21,30 @@
 
 (function_item name: (identifier) @function)
 (call_expression function: (identifier) @function)
+(generic_function function: (identifier) @function)
 (method_call_expression (identifier) @function.method)
+(macro_invocation macro: (identifier) @function.special)
 
 (field_declaration name: (identifier) @property)
 (parameter pattern: (identifier) @variable.parameter)
+(closure_parameter pattern: (identifier) @variable.parameter)
 
 (identifier) @variable
 
 "|>" @operator
 
+; Only tokens the grammar actually defines may appear here; an unknown
+; token makes the whole query fail to load.
 [
-  "as" "async" "await" "const" "crate" "dyn" "enum" "extern" "fn"
-  "impl" "let" "mod" "mut" "pub" "ref" "self" "Self" "static" "struct"
-  "super" "trait" "type" "unsafe" "use" "where"
-  "if" "else" "match" "loop" "while" "for" "in" "break" "continue"
-  "return" "yield" "defer" "select" "go"
+  "as" "async" "const" "dyn" "enum" "extern" "fn"
+  "impl" "let" "mod" "mut" "pub" "self" "static" "struct"
+  "trait" "type" "unsafe" "use" "where"
+  "if" "else" "match" "loop" "while" "for" "in" "break"
+  "return" "defer" "select" "go" "arena"
 ] @keyword
+
+; `continue_expression` is a bare-literal rule; its token is not exposed
+; as an anonymous node, so match the named node instead.
+(continue_expression) @keyword
 
 (attribute_item) @attribute

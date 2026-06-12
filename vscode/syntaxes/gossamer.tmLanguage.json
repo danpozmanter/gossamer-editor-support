@@ -97,12 +97,17 @@
     "keywords": {
       "patterns": [
         {
+          "comment": "`arena` is contextual: a keyword only when it opens a block",
+          "name": "keyword.control.gossamer",
+          "match": "\\barena\\b(?=\\s*\\{)"
+        },
+        {
           "name": "keyword.control.gossamer",
           "match": "\\b(if|else|match|loop|while|for|in|break|continue|return|yield|defer|select|go)\\b"
         },
         {
           "name": "keyword.other.gossamer",
-          "match": "\\b(as|async|await|const|crate|dyn|enum|extern|fn|impl|let|mod|mut|pub|ref|self|Self|static|struct|super|trait|type|unsafe|use|where)\\b"
+          "match": "\\b(as|async|await|const|crate|dyn|enum|extern|fn|impl|let|mod|mut|package|pub|self|Self|static|struct|super|trait|type|unsafe|use|where)\\b"
         },
         {
           "name": "entity.name.function.macro.gossamer",
@@ -118,7 +123,7 @@
         },
         {
           "name": "support.type.gossamer",
-          "match": "\\b(Arc|Array|BTreeMap|BTreeSet|Box|HashMap|HashSet|Mutex|Option|Receiver|Result|Sender|String|Vec)\\b"
+          "match": "\\b(Arc|Array|BTreeMap|BTreeSet|Box|Fn|FnMut|FnOnce|HashMap|HashSet|JoinHandle|Mutex|Option|Rc|Receiver|Result|RwLock|Sender|String|Vec|Weak)\\b"
         },
         {
           "name": "entity.name.type.gossamer",

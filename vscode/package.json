@@ -2,7 +2,7 @@
   "name": "gossamer",
   "displayName": "Gossamer",
   "description": "Syntax highlighting, language configuration, and LSP client for the Gossamer programming language.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "gossamer-lang",
   "license": "Apache-2.0",
   "repository": {

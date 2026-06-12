@@ -10,17 +10,20 @@ endif
 syntax case match
 
 syntax keyword gossamerKeyword as async await const crate dyn enum extern fn
-syntax keyword gossamerKeyword impl let mod mut pub ref self Self static struct
-syntax keyword gossamerKeyword super trait type unsafe use where
+syntax keyword gossamerKeyword impl let mod mut package pub self Self static
+syntax keyword gossamerKeyword struct super trait type unsafe use where
 syntax keyword gossamerControl if else match loop while for in break continue
 syntax keyword gossamerControl return yield defer select go
+" `arena` is contextual: a keyword only when it opens a block.
+syntax match gossamerControl "\<arena\>\ze\s*{"
 
 syntax keyword gossamerType bool char str
 syntax keyword gossamerType i8 i16 i32 i64 i128 isize
 syntax keyword gossamerType u8 u16 u32 u64 u128 usize
 syntax keyword gossamerType f32 f64
-syntax keyword gossamerType Arc Array BTreeMap BTreeSet Box HashMap HashSet
-syntax keyword gossamerType Mutex Option Receiver Result Sender String Vec
+syntax keyword gossamerType Arc Array BTreeMap BTreeSet Box Fn FnMut FnOnce
+syntax keyword gossamerType HashMap HashSet JoinHandle Mutex Option Rc Receiver
+syntax keyword gossamerType Result RwLock Sender String Vec Weak
 
 syntax keyword gossamerBoolean true false
 syntax keyword gossamerConstant None Some Ok Err

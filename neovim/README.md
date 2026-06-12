@@ -18,7 +18,7 @@ Add the parser via the configured parser table. Example with
       install_info = {
         url = "https://github.com/gossamer-lang/gossamer-site",
         location = "editors/tree-sitter-gossamer",
-        files = { "src/parser.c" },
+        files = { "src/parser.c", "src/scanner.c" },
         branch = "main",
       },
       filetype = "gossamer",

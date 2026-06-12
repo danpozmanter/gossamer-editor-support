@@ -1,0 +1,470 @@
+================================================================================
+arena block
+================================================================================
+
+fn main() {
+    arena {
+        let t = build(8)
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_item
+    (identifier)
+    (parameters)
+    (block
+      (arena_block
+        (block
+          (let_declaration
+            (identifier)
+            (call_expression
+              (identifier)
+              (literal
+                (integer_literal)))))))))
+
+================================================================================
+arena as an ordinary identifier
+================================================================================
+
+fn main() {
+    let x = arena + 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_item
+    (identifier)
+    (parameters)
+    (block
+      (let_declaration
+        (identifier)
+        (binary_expression
+          (identifier)
+          (literal
+            (integer_literal)))))))
+
+================================================================================
+let-else
+================================================================================
+
+fn main() {
+    let Some(v) = m.get(&k) else { return }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_item
+    (identifier)
+    (parameters)
+    (block
+      (let_declaration
+        (tuple_struct_pattern
+          (identifier)
+          (identifier))
+        (method_call_expression
+          (identifier)
+          (identifier)
+          (reference_expression
+            (identifier)))
+        (block
+          (return_expression))))))
+
+================================================================================
+if let and while let
+================================================================================
+
+fn main() {
+    if let Some(n) = maybe {
+        use_it(n)
+    }
+    while let Some(v) = rx.recv() {
+        handle(v)
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_item
+    (identifier)
+    (parameters)
+    (block
+      (if_expression
+        (let_condition
+          (tuple_struct_pattern
+            (identifier)
+            (identifier))
+          (identifier))
+        (block
+          (call_expression
+            (identifier)
+            (identifier))))
+      (while_expression
+        (let_condition
+          (tuple_struct_pattern
+            (identifier)
+            (identifier))
+          (method_call_expression
+            (identifier)
+            (identifier)))
+        (block
+          (call_expression
+            (identifier)
+            (identifier)))))))
+
+================================================================================
+pipe closures
+================================================================================
+
+fn main() {
+    let f = |x: i64| x * 2
+    let g = |a, b| a + b
+    let h = || compute()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_item
+    (identifier)
+    (parameters)
+    (block
+      (let_declaration
+        (identifier)
+        (closure_expression
+          (closure_parameters
+            (closure_parameter
+              (identifier)
+              (primitive_type)))
+          (binary_expression
+            (identifier)
+            (literal
+              (integer_literal)))))
+      (let_declaration
+        (identifier)
+        (closure_expression
+          (closure_parameters
+            (closure_parameter
+              (identifier))
+            (closure_parameter
+              (identifier)))
+          (binary_expression
+            (identifier)
+            (identifier))))
+      (let_declaration
+        (identifier)
+        (closure_expression
+          (closure_parameters)
+          (call_expression
+            (identifier)))))))
+
+================================================================================
+fn-form closure
+================================================================================
+
+fn main() {
+    let f = fn(x: i64) -> i64 { x + 1 }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_item
+    (identifier)
+    (parameters)
+    (block
+      (let_declaration
+        (identifier)
+        (closure_expression
+          (parameters
+            (parameter
+              (identifier)
+              (primitive_type)))
+          (primitive_type)
+          (block
+            (binary_expression
+              (identifier)
+              (literal
+                (integer_literal)))))))))
+
+================================================================================
+format macros and vec macro
+================================================================================
+
+fn main() {
+    println!("{}: {}", name, value)
+    let xs = vec![1, 2, 3]
+    let ys = vec![0; 8]
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_item
+    (identifier)
+    (parameters)
+    (block
+      (macro_invocation
+        (identifier)
+        (literal
+          (string_literal))
+        (identifier)
+        (identifier))
+      (let_declaration
+        (identifier)
+        (macro_invocation
+          (identifier)
+          (literal
+            (integer_literal))
+          (literal
+            (integer_literal))
+          (literal
+            (integer_literal))))
+      (let_declaration
+        (identifier)
+        (macro_invocation
+          (identifier)
+          (literal
+            (integer_literal))
+          (literal
+            (integer_literal)))))))
+
+================================================================================
+try and cast expressions
+================================================================================
+
+fn run(path: &String) -> Result<(), errors::Error> {
+    let text = fs::read_to_string(path)?
+    let n = text.len() as i64
+    Ok(())
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_item
+    (identifier)
+    (parameters
+      (parameter
+        (identifier)
+        (reference_type
+          (type_identifier))))
+    (generic_type
+      (type_identifier)
+      (tuple_type)
+      (identifier)
+      (identifier))
+    (block
+      (let_declaration
+        (identifier)
+        (try_expression
+          (call_expression
+            (identifier)
+            (identifier)
+            (identifier))))
+      (let_declaration
+        (identifier)
+        (cast_expression
+          (method_call_expression
+            (identifier)
+            (identifier))
+          (primitive_type)))
+      (call_expression
+        (identifier)
+        (tuple_expression)))))
+
+================================================================================
+turbofish call
+================================================================================
+
+fn main() {
+    let user: User = from_json::<User>(&text)?
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_item
+    (identifier)
+    (parameters)
+    (block
+      (let_declaration
+        (identifier)
+        (type_identifier)
+        (try_expression
+          (call_expression
+            (generic_function
+              (identifier)
+              (type_identifier))
+            (reference_expression
+              (identifier))))))))
+
+================================================================================
+closure trait types
+================================================================================
+
+fn apply(f: Fn(i64) -> i64, x: i64) -> i64 {
+    f(x)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_item
+    (identifier)
+    (parameters
+      (parameter
+        (identifier)
+        (function_type
+          (type_identifier)
+          (primitive_type)
+          (primitive_type)))
+      (parameter
+        (identifier)
+        (primitive_type)))
+    (primitive_type)
+    (block
+      (call_expression
+        (identifier)
+        (identifier)))))
+
+================================================================================
+nested block comments
+================================================================================
+
+fn main() {
+    /* outer /* inner */ tail */
+    let x = 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_item
+    (identifier)
+    (parameters)
+    (block
+      (block_comment)
+      (let_declaration
+        (identifier)
+        (literal
+          (integer_literal))))))
+
+================================================================================
+trait method signatures without bodies
+================================================================================
+
+trait Shape {
+    fn area(&self) -> f64
+    fn name(&self) -> String
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (trait_item
+    (type_identifier)
+    (declaration_block
+      (function_item
+        (identifier)
+        (parameters)
+        (primitive_type))
+      (function_item
+        (identifier)
+        (parameters)
+        (type_identifier)))))
+
+================================================================================
+mut and rest patterns
+================================================================================
+
+fn main() {
+    let (mut x, y) = (10, 20)
+    let (first, .., last) = (1, 2, 3, 4, 5)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_item
+    (identifier)
+    (parameters)
+    (block
+      (let_declaration
+        (tuple_pattern
+          (mut_pattern
+            (identifier))
+          (identifier))
+        (tuple_expression
+          (literal
+            (integer_literal))
+          (literal
+            (integer_literal))))
+      (let_declaration
+        (tuple_pattern
+          (identifier)
+          (identifier))
+        (tuple_expression
+          (literal
+            (integer_literal))
+          (literal
+            (integer_literal))
+          (literal
+            (integer_literal))
+          (literal
+            (integer_literal))
+          (literal
+            (integer_literal)))))))
+
+================================================================================
+variant-level attributes
+================================================================================
+
+#[derive(Clone, PartialEq, Eq, Default, Debug, Hash)]
+enum Token {
+    Num(i64),
+    #[default]
+    End,
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (attribute_item)
+  (enum_item
+    (type_identifier)
+    (enum_variant
+      (type_identifier)
+      (primitive_type))
+    (enum_variant
+      (attribute_item)
+      (type_identifier))))
+
+================================================================================
+unicode identifiers
+================================================================================
+
+fn main() {
+    let café = 7
+    let π = 3.14
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_item
+    (identifier)
+    (parameters)
+    (block
+      (let_declaration
+        (identifier)
+        (literal
+          (integer_literal)))
+      (let_declaration
+        (identifier)
+        (literal
+          (float_literal))))))

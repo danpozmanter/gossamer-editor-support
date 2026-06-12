@@ -1,7 +1,7 @@
 ;;; gossamer-mode.el --- Major mode for the Gossamer language -*- lexical-binding: t; -*-
 
 ;; Author: Gossamer contributors
-;; Version: 0.1.0
+;; Version: 0.2.0
 ;; Keywords: languages
 ;; URL: https://github.com/gossamer-lang/gossamer-site
 
@@ -20,7 +20,8 @@
   (let ((table (make-syntax-table)))
     (modify-syntax-entry ?_ "w" table)
     (modify-syntax-entry ?/ ". 124b" table)
-    (modify-syntax-entry ?* ". 23" table)
+    ;; The `n` flag: Gossamer block comments nest.
+    (modify-syntax-entry ?* ". 23n" table)
     (modify-syntax-entry ?\n "> b" table)
     (modify-syntax-entry ?\" "\"" table)
     (modify-syntax-entry ?\\ "\\" table)
@@ -29,7 +30,7 @@
 
 (defconst gossamer-keywords
   '("as" "async" "await" "const" "crate" "dyn" "enum" "extern" "fn"
-    "impl" "let" "mod" "mut" "pub" "ref" "self" "Self" "static"
+    "impl" "let" "mod" "mut" "package" "pub" "self" "Self" "static"
     "struct" "super" "trait" "type" "unsafe" "use" "where"))
 
 (defconst gossamer-control
@@ -41,14 +42,17 @@
     "i8" "i16" "i32" "i64" "i128" "isize"
     "u8" "u16" "u32" "u64" "u128" "usize"
     "f32" "f64"
-    "Arc" "Array" "BTreeMap" "BTreeSet" "Box" "HashMap" "HashSet"
-    "Mutex" "Option" "Receiver" "Result" "Sender" "String" "Vec"))
+    "Arc" "Array" "BTreeMap" "BTreeSet" "Box" "Fn" "FnMut" "FnOnce"
+    "HashMap" "HashSet" "JoinHandle" "Mutex" "Option" "Rc" "Receiver"
+    "Result" "RwLock" "Sender" "String" "Vec" "Weak"))
 
 (defconst gossamer-constants
   '("true" "false" "None" "Some" "Ok" "Err"))
 
 (defconst gossamer-font-lock-keywords
-  `((,(regexp-opt gossamer-keywords 'symbols) . font-lock-keyword-face)
+  `(;; `arena` is contextual: a keyword only when it opens a block.
+    ("\\_<\\(arena\\)\\_>\\s-*{" 1 font-lock-keyword-face)
+    (,(regexp-opt gossamer-keywords 'symbols) . font-lock-keyword-face)
     (,(regexp-opt gossamer-control 'symbols) . font-lock-keyword-face)
     (,(regexp-opt gossamer-types 'symbols) . font-lock-type-face)
     (,(regexp-opt gossamer-constants 'symbols) . font-lock-constant-face)

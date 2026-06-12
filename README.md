@@ -18,11 +18,13 @@ editor supports it) tree-sitter queries.
 | **Sublime Text**           | `sublime/`                 | `.sublime-syntax`     |
 | **Zed**                    | `zed/`                     | extension + grammar   |
 
-All integrations cover at minimum:
+All integrations track the Gossamer 0.12.0 surface and cover at
+minimum:
 
 - `.gos` file detection
-- Comments (`//`, `/* ... */`)
-- Keywords, primitive types, common stdlib types
+- Comments (`//` and nesting `/* ... */`)
+- Keywords — including the contextual `arena { }` block (0.12.0)
+- Primitive types and common stdlib types
 - Numeric literals (decimal, hex, binary, octal) with type suffixes
 - String, byte-string, raw-string, and char literals
 - The forward-pipe operator `|>`

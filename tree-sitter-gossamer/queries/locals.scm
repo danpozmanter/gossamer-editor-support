@@ -7,7 +7,9 @@
 
 ; Definitions
 (let_declaration pattern: (identifier) @local.definition)
+(let_condition pattern: (identifier) @local.definition)
 (parameter pattern: (identifier) @local.definition)
+(closure_parameter pattern: (identifier) @local.definition)
 (function_item name: (identifier) @local.definition)
 (struct_item name: (type_identifier) @local.definition)
 (enum_item name: (type_identifier) @local.definition)
