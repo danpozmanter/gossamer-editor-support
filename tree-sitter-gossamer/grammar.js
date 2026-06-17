@@ -63,7 +63,10 @@ module.exports = grammar({
   ],
 
   rules: {
-    source_file: $ => repeat($._item),
+    // The entry file is implicitly `fn main`: bare statements may appear at
+    // file scope alongside items. `_statement` already includes `_item`, so
+    // this parses items and statements the same way a block body does.
+    source_file: $ => repeat($._statement),
 
     _item: $ => choice(
       $.use_declaration,
