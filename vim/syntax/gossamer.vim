@@ -41,7 +41,7 @@ syntax match gossamerChar +b\?'\\\?.'+
 syntax match gossamerChar +b\?'\\x\x\{2}'+
 syntax match gossamerChar +b\?'\\u{\x\+}'+
 
-syntax region gossamerComment start="//" end="$" contains=gossamerTodo,@Spell
+syntax match gossamerComment "//.*$" contains=gossamerTodo,@Spell
 syntax region gossamerBlockComment start="/\*" end="\*/" contains=gossamerBlockComment,gossamerTodo,@Spell
 syntax keyword gossamerTodo TODO FIXME XXX NOTE contained
 
@@ -51,12 +51,14 @@ syntax match gossamerOperator "<<="
 syntax match gossamerOperator ">>="
 syntax match gossamerOperator "\.\.="
 syntax match gossamerOperator "\.\."
-syntax match gossamerOperator "[+\-*/%=<>!&|^~?@]"
+syntax match gossamerOperator "[+\-*%=<>!&|^~?@]"
+syntax match gossamerOperator "\(//\|/\*\)\@!/"
 syntax match gossamerOperator "->"
 syntax match gossamerOperator "=>"
 syntax match gossamerOperator "::"
+syntax match gossamerOperator "#"
 
-syntax match gossamerAttribute "#!\?\[.\{-}\]"
+syntax match gossamerAttribute "^\s*\zs#!\?\[.\{-}\]"
 syntax match gossamerMacro "\<[a-zA-Z_][a-zA-Z0-9_]*!"
 
 syntax match gossamerFunction "\<[a-zA-Z_][a-zA-Z0-9_]*\ze\s*("
